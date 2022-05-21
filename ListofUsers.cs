@@ -52,15 +52,14 @@ namespace Lab_06
             }
             
             Thread.Sleep(10);
-            DateTime created = new DateTime(1990, 1, 1).AddDays(rnd.Next(20, 500));
-            DateTime? deleted = new DateTime(2000, 1, 1).AddDays(rnd.Next(20, 500));
+            DateTime created = new DateTime(1990, 1, 1).AddDays(rnd.Next(20, 5000));
+            DateTime? deleted = new DateTime(2000, 1, 1).AddDays(rnd.Next(20, 5000));
             if (rnd.Next()%5==0)
             {
                 deleted = null;
             }
             User user = new User(name, rola, age, oceny, created, deleted);
-            //xd++;
-            //Console.WriteLine(xd);
+            
             return user;
             
         }
