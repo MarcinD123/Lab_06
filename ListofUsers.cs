@@ -21,7 +21,7 @@ namespace Lab_06
             string rola; ;
 
             int szansaNaRole = rnd.Next(0,100);
-            Console.WriteLine(szansaNaRole);
+            //Console.WriteLine(szansaNaRole);
             if (szansaNaRole>90)
             {
                 rola = "ADMIN";
@@ -51,7 +51,7 @@ namespace Lab_06
                 oceny = null;
             }
             
-            Thread.Sleep(10);
+            //Thread.Sleep(10);
             DateTime created = new DateTime(1990, 1, 1).AddDays(rnd.Next(20, 5000));
             DateTime? deleted = new DateTime(2000, 1, 1).AddDays(rnd.Next(20, 5000));
             if (rnd.Next()%5==0)
