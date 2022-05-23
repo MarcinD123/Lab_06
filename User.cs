@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lab_06
 {
+    [Serializable]
     public class User
     {
         public User(string name, string role, int age, int[] marks, DateTime createdAt, DateTime? removedAt)

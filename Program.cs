@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 using System.IO;
-
+using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
+using System.Xml.Serialization;
+using System.Text.Json;
+//using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 namespace Lab_06
 {
     class Program
@@ -230,8 +232,8 @@ namespace Lab_06
             Console.WriteLine("SERIALIZACJA XML USERA:");
             //serializacja xml usera
             string xmlserialized;
-            
-            XmlSerializer serializer = new XmlSerializer(typeof(User));           
+
+            XmlSerializer serializer = new XmlSerializer(typeof(User));
             using (MemoryStream stream = new MemoryStream())
             {
                 serializer.Serialize(stream, users[0]);
@@ -241,7 +243,7 @@ namespace Lab_06
 
                 Console.WriteLine(xmlserialized);
                 Console.WriteLine("------------------------");
-            //deserializacja xml usera
+                //deserializacja xml usera
             }
 
             Console.WriteLine("DESERIALIACJA XML USERA:");
@@ -250,19 +252,19 @@ namespace Lab_06
             {
                 User deserializedUser = (User)serializer.Deserialize(stream);
                 User.Write(deserializedUser);
-               
+
             }
             Console.WriteLine("------------------------");
 
 
             string xmlArrayOfUsers;
             //serializacja xml listy
-            Console.WriteLine("SERIALIZACJA LISTY:");
+            Console.WriteLine("SERIALIZACJA DO XML LISTY:");
             XmlSerializer listSerializer = new XmlSerializer(users.GetType());
             using (MemoryStream stream = new MemoryStream())
             {
                 listSerializer.Serialize(stream, users);
-                
+
                 stream.Flush();
                 xmlArrayOfUsers = Encoding.UTF8.GetString(stream.ToArray());
                 Console.WriteLine(xmlArrayOfUsers);
@@ -279,8 +281,94 @@ namespace Lab_06
                 {
                     User.Write(item);
                 }
+                stream.Flush();
+            }
+            Console.WriteLine("------------------------");
+
+            //serialiacja binarna
+            string binarySerialized;
+            Console.WriteLine("SERIALIACJA BINARNA USERA:");
+            BinaryFormatter formatter = new BinaryFormatter();
+            using (MemoryStream stream = new MemoryStream())
+            {
+                formatter.Serialize(stream, users[0]);
+                binarySerialized = Convert.ToBase64String(stream.ToArray());
+                stream.Flush();
+
+
+
+            }
+            Console.WriteLine(binarySerialized);
+            Console.WriteLine("DESERIALIACJA BINARNA USERA:");
+            //deserializacja binarna
+            User deserializedUserbin;
+            bytes = Convert.FromBase64String(binarySerialized);
+            using (MemoryStream stream = new MemoryStream(bytes))
+            {
+                deserializedUserbin = (User)formatter.Deserialize(stream);
+                stream.Flush();
+            }
+            User.Write(deserializedUserbin);
+            Console.WriteLine("------------------------");
+
+
+            //serializacja binarna listy
+            Console.WriteLine("SERIALIZACJA BINARNA LISTY");
+            BinaryFormatter formatterListy = new BinaryFormatter();
+            using (MemoryStream stream = new MemoryStream())
+            {
+                formatter.Serialize(stream, users);
+                binarySerialized = Convert.ToBase64String(stream.ToArray());
+                stream.Flush();
+            }
+            Console.WriteLine(binarySerialized);
+
+            List<User> deserializedBin;
+
+            Console.WriteLine("------------------------");
+            Console.WriteLine();
+            Console.WriteLine("DESERIALIZACJA BINARNA LISTY");
+
+            bytes = Convert.FromBase64String(binarySerialized);
+            using (MemoryStream stream = new MemoryStream(bytes))
+            {
+                deserializedBin = (List<User>)formatter.Deserialize(stream);
+                stream.Flush();
+            }
+            foreach (var item in deserializedBin)
+            {
+                User.Write(item);
             }
 
+
+            //serializacja json usera
+            Console.WriteLine("SERIALIZACJA JSON USERA:");
+            string jsonUser = System.Text.Json.JsonSerializer.Serialize(users[0]);
+            Console.WriteLine(jsonUser);
+            Console.WriteLine("DESERIALIZACJA JSON USERA:");
+            User deserializedJson = System.Text.Json.JsonSerializer.Deserialize<User>(jsonUser);
+            User.Write(deserializedJson);
+
+            //serializacja listy
+
+            string jserialized;
+            Console.WriteLine("SERIALIZACJA JSON LISTY");
+            using (MemoryStream stream = new MemoryStream())
+            {
+                System.Text.Json.JsonSerializer.Serialize(stream, users);
+                jserialized = Encoding.UTF8.GetString(stream.ToArray());
+                stream.Flush();
+
+            }
+            Console.WriteLine(jserialized);
+            //deserializacja losty json
+            List<User> deserialzedListJson = JsonSerializer.Deserialize<List<User>>(jserialized);
+            foreach (var item in deserialzedListJson)
+            {
+                User.Write(item);
+            }
+            
+            
 
         }
 
