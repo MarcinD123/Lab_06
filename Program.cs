@@ -224,32 +224,69 @@ namespace Lab_06
             {
                 Console.WriteLine(item.Name + " " + item.CreatedAt);
             }
+            Console.WriteLine("------------------------");
 
 
-            XmlSerializer serializer = new XmlSerializer(typeof(User));
-
+            Console.WriteLine("SERIALIZACJA XML USERA:");
+            //serializacja xml usera
+            string xmlserialized;
+            
+            XmlSerializer serializer = new XmlSerializer(typeof(User));           
             using (MemoryStream stream = new MemoryStream())
             {
-                var user = users[0];
-                serializer.Serialize(stream, user);
+                serializer.Serialize(stream, users[0]);
+
                 stream.Flush();
+                xmlserialized = Encoding.UTF8.GetString(stream.ToArray());
 
-                string xml = Encoding.UTF8.GetString(stream.ToArray());
+                Console.WriteLine(xmlserialized);
+                Console.WriteLine("------------------------");
+            //deserializacja xml usera
+            }
 
-                Console.WriteLine(xml);  // <?xml version="1.0"?>
-                                         // <User xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-                                         //   <Id>1</Id>
-                                         //   <Name>Jan Kowalski</Name>
-                                         //   <Age>30</Age>
-                                         // </User>
+            Console.WriteLine("DESERIALIACJA XML USERA:");
+            byte[] bytes = Encoding.UTF8.GetBytes(xmlserialized);
+            using (MemoryStream stream = new MemoryStream(bytes))
+            {
+                User deserializedUser = (User)serializer.Deserialize(stream);
+                User.Write(deserializedUser);
+               
+            }
+            Console.WriteLine("------------------------");
+
+
+            string xmlArrayOfUsers;
+            //serializacja xml listy
+            Console.WriteLine("SERIALIZACJA LISTY:");
+            XmlSerializer listSerializer = new XmlSerializer(users.GetType());
+            using (MemoryStream stream = new MemoryStream())
+            {
+                listSerializer.Serialize(stream, users);
+                
+                stream.Flush();
+                xmlArrayOfUsers = Encoding.UTF8.GetString(stream.ToArray());
+                Console.WriteLine(xmlArrayOfUsers);
+            }
+
+            //deserializacja xml listy 
+
+            Console.WriteLine("DESERIALIACJA LISTY XML");
+            bytes = Encoding.UTF8.GetBytes(xmlArrayOfUsers);
+            using (MemoryStream stream = new MemoryStream(bytes))
+            {
+                List<User> deserializedList = (List<User>)listSerializer.Deserialize(stream);
+                foreach (var item in deserializedList)
+                {
+                    User.Write(item);
+                }
             }
 
 
         }
 
-       
-        
-        
+
+
+
 
 
     }

@@ -58,8 +58,7 @@ namespace Lab_06
             {
                 deleted = null;
             }
-            User user = new User(name, rola, age, oceny, created, deleted);
-            
+            User user = new User(name, rola, age, oceny, created, deleted);           
             return user;
             
         }
